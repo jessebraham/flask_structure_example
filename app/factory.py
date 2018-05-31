@@ -16,6 +16,7 @@ import logging
 from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 
+from app.blueprints import home_bp
 from app.errors import error_templates
 from app.extensions import db
 
@@ -53,6 +54,9 @@ def create_app(settings_override=None):
     # Create handlers for all necessary HTTP errors. In our case, we're simply
     # rendering templates for each error of interest.
     error_templates(app)
+
+    # Register all required Blueprints with our Flask application.
+    app.register_blueprint(home_bp)
 
     # Configure and register all required extensions with our Flask
     # application.
