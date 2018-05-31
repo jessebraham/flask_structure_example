@@ -11,7 +11,12 @@ Modified:   -
 
 '''
 
+import logging
+
 from flask import Flask
+from werkzeug.contrib.fixers import ProxyFix
+
+from app.errors import error_templates
 
 
 def create_app(settings_override=None):
@@ -40,5 +45,53 @@ def create_app(settings_override=None):
     if settings_override:
         app.config.update(settings_override)
 
+    # Configure the application's file logger and register any middleware.
+    logger(app)
+    middleware(app)
+
+    # Create handlers for all necessary HTTP errors. In our case, we're simply
+    # rendering templates for each error of interest.
+    error_templates(app)
+
     # Return the fully configured Flask application object.
     return app
+
+
+def logger(app):
+    '''
+    Configure a file handler for use with the Flask application's built-in
+    logger. The log location, log level, and log formats can all be configured
+    via the config file. Note that this function mutates the provided 'app'
+    parameter.
+
+    :param app: Flask application instance
+    '''
+
+    # Instantiate a new File Handler, storing our log files in the directory
+    # specified by the app config. Set the log level to the configured value.
+    handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
+    handler.setLevel(app.config['LOGGING_LEVEL'])
+
+    # Create a log formatter, using the format specified in the app config.
+    # Apply this formatter to the above created handler.
+    formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
+    handler.setFormatter(formatter)
+
+    # Register our handler with the Flask object's pre-configured logger
+    # object.
+    app.logger.addHandler(handler)
+
+
+def middleware(app):
+    '''
+    Register 0 or more middleware. Note that this function mutates the
+    provided 'app' parameter.
+
+    :param app: Flask application instance
+    '''
+
+    # Swap request.remote_addr with the real IP address even if behind a
+    # proxy.
+    #
+    # http://werkzeug.pocoo.org/docs/0.14/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app)
