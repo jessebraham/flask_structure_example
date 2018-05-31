@@ -17,6 +17,7 @@ from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 
 from app.errors import error_templates
+from app.extensions import db
 
 
 def create_app(settings_override=None):
@@ -52,6 +53,10 @@ def create_app(settings_override=None):
     # Create handlers for all necessary HTTP errors. In our case, we're simply
     # rendering templates for each error of interest.
     error_templates(app)
+
+    # Configure and register all required extensions with our Flask
+    # application.
+    extensions(app)
 
     # Return the fully configured Flask application object.
     return app
@@ -95,3 +100,15 @@ def middleware(app):
     #
     # http://werkzeug.pocoo.org/docs/0.14/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
     app.wsgi_app = ProxyFix(app.wsgi_app)
+
+
+def extensions(app):
+    '''
+    Register 0 or more extensions with the Flask application object. Note that
+    this function mutates the provided 'app' parameter.
+
+    :param app: Flask application instance
+    '''
+
+    # Register the SQLAlchemy database object with our Flask application.
+    db.init_app(app)
