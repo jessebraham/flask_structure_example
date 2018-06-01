@@ -1,6 +1,9 @@
 # flask_structure_example
 
-A example of how to structure a medium to large sized [Flask](http://flask.pocoo.org/) application, with boilerplate for common setup and configuration.
+> This repository contains the source code to accompany ["Structuring Large Flask Applications"](https://www.beta7.io/python/structuring-large-flask-applications.html).  
+> For a more in-depth explanation please refer to the post.
+
+An example of how to structure a medium to large sized [Flask](http://flask.pocoo.org/) application, with boilerplate for common setup and configuration.
 
 ## Quickstart
 
