@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 '''
 
+Instantiate any Flask extensions used by our application here. In our case, we
+are only using Flask-SQLAlchemy.
+
 Author:     Jesse Braham <jesse@beta7.io>
 Created:    May, 2018
 Modified:   -

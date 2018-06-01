@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 '''
 
+Create the 'home' blueprint, and define its endpoints.
+
 Author:     Jesse Braham <jesse@beta7.io>
 Created:    May, 2018
 Modified:   -
